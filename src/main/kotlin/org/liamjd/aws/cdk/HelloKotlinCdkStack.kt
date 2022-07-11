@@ -12,13 +12,11 @@ class HelloKotlinCdkStack(scope: Construct, id: String, props: StackProps?) : St
 	constructor(scope: Construct, id: String) : this(scope, id, null)
 
 	init {
-		Tags.of(this).add("experiment","cdk-kotlin")
-		Bucket.Builder.create(this,"MyFirstKotlinCDKBucket")
+		Tags.of(this).add("experiment", "cdk-kotlin")
+		Bucket.Builder.create(this, "MyFirstKotlinCDKBucket")
 			.versioned(false)
 			.removalPolicy(RemovalPolicy.DESTROY)
 			.autoDeleteObjects(true)
 			.build()
-
-
 	}
 }

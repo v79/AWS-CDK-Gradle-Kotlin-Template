@@ -6,7 +6,7 @@ import software.amazon.awscdk.StackProps
 fun main() {
 	val app = App()
 
-	val stack = HelloKotlinCdkStack(app,"HelloKotlinCDKStack", StackProps.builder().build())
+	val stack = HelloKotlinCdkStack(app, "HelloKotlinCDKStack", StackProps.builder().build())
 
 	app.synth()
 }
