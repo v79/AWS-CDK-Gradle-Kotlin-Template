@@ -3,12 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	kotlin("jvm") version "1.7.10"
 	`maven-publish`
-	id("com.github.johnrengelman.shadow") version "7.1.2"
 	application
 }
 
 group = "org.liamjd.aws"
-version = "1.0-SNAPSHOT"
+version = "1.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -35,4 +34,8 @@ tasks.withType<KotlinCompile> {
 
 application {
 	mainClass.set("org.liamjd.aws.cdk.HelloKotlinCDKAppKt")
+}
+
+tasks.withType<JavaExec> {
+	dependsOn(":Lambda:shadowJar")
 }
