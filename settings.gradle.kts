@@ -1,3 +1,3 @@
 
-rootProject.name = "CDK-Kotlin-Test"
+rootProject.name = "CDK-Kotlin-Template"
 
