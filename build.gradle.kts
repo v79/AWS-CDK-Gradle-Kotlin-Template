@@ -22,6 +22,8 @@ dependencies {
 	implementation("software.constructs:constructs:[10.0.0,11.0.0)")
 	// testing
 	testImplementation(kotlin("test"))
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.21")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.21")
 }
 
 tasks.test {
