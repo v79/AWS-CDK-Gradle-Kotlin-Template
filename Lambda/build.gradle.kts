@@ -11,6 +11,7 @@ version = "1.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
@@ -20,6 +21,9 @@ dependencies {
     implementation("software.amazon.awscdk:aws-cdk-lib:2.31.0")
     implementation("software.constructs:constructs:[10.0.0,11.0.0)")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
+    // reflection/processing
+    implementation(project(":annotations"))
 
     // testing
     implementation(kotlin("stdlib-jdk8"))

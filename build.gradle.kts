@@ -12,6 +12,7 @@ version = "1.1-SNAPSHOT"
 repositories {
 	mavenCentral()
 	mavenLocal()
+	google()
 	maven {
 		url = uri("https://repo.maven.apache.org/maven2/")
 	}
@@ -20,6 +21,11 @@ repositories {
 dependencies {
 	implementation("software.amazon.awscdk:aws-cdk-lib:2.31.0")
 	implementation("software.constructs:constructs:[10.0.0,11.0.0)")
+
+	// reflection
+	implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
+	implementation("org.reflections:reflections:0.10.2")
+	implementation(project(":annotations"))
 	// testing
 	testImplementation(kotlin("test"))
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.21")

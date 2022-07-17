@@ -2,6 +2,7 @@ package org.liamjd.aws.routing
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Disabled
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -10,20 +11,52 @@ class Cantilever {
 	val router: KRouter = KRouter()
 
 	init {
-		router.get("/") {
-			println("I've found the get / method")
-			RouteResponse(200)
+		router.apply {
+			get("/") { ctx ->
+				println("I've found the get / method")
+				ctx.respond {
+					status(200)
+				}
+			}
+
+			get("/a/longer/path") {
+				println("I can match a longer path")
+				RouteResponse(200)
+			}
+
+			put("/") {
+				println("I can respond to a PUT request")
+				RouteResponse(201)
+			}
+
+			get("/users/{userId}") {
+				println("You've reached route /users/{userId}")
+				RouteResponse(200)
+			}
+
+			get("/search/{businessName}") {
+				println("You were searching for a business")
+				RouteResponse(200)
+			}
+
+			get("/posts/{pageId}/count") { ctx ->
+				println("Return the count for page pageId: ${ctx.pathParameterMap["pageId"]}")
+
+				ctx.respond {
+					status(200)
+				}
+			}
+
+			path("/users/") {
+				get("bob") {
+					println("This is route GET /users/bob")
+					RouteResponse(200)
+				}
+			}
+
 		}
 
-		router.get("/a/longer/path") {
-			println("I can match a longer path")
-			RouteResponse(200)
-		}
-
-		router.put("/") {
-			println("I can respond to a PUT request")
-			RouteResponse(201)
-		}
+		router.listRoutes()
 	}
 
 	suspend fun respond(message: AWSAPIGatewayInput): RouteResponse {
@@ -66,7 +99,7 @@ class RoutingTest {
 	@Test
 	fun `KRoute class can add a route specified by a path and a method`() {
 		val router = KRouter()
-		val fakeRoutePath = RoutePath("/")
+		val fakeRoutePath = RoutePath.parse("/")
 
 		router.add(KRoute(APIGatewayMethod.GET, handler = fakeHandler, fakeRoutePath))
 
@@ -80,7 +113,7 @@ class RoutingTest {
 	@Test
 	fun `Router can invoke the fakeHandler`() {
 		val router = KRouter()
-		val fakeRoutePath = RoutePath("/")
+		val fakeRoutePath = RoutePath.parse("/")
 
 		router.add(KRoute(APIGatewayMethod.GET, handler = fakeHandler, fakeRoutePath))
 
@@ -88,10 +121,10 @@ class RoutingTest {
 		assertNotNull(response)
 	}
 
-	// Now we start testing the real application, haha
+	// Now we start testing the real application
 
 	@Test
-	fun `cantilever get request returns status 200`() = runTest {
+	fun `cantilever get request to root returns status 200`() = runTest {
 		val cantilever = Cantilever()
 		val response = cantilever.respond(emptyGetRequest)
 
@@ -110,7 +143,8 @@ class RoutingTest {
 	}
 
 	@Test
-	fun `returns 404 status when method isn't supported`() = runTest {
+	fun `returns 404 status when method isn't supported for a particular route`() = runTest {
+		// TODO: should this be a 400 or other such error, instead of 404?
 		val cantilever = Cantilever()
 		val response = cantilever.respond(emptyGetRequest.copy(method = APIGatewayMethod.POST))
 		assertNotNull(response) {
@@ -128,7 +162,7 @@ class RoutingTest {
 	}
 
 	@Test
-	fun `can respond to a PUT request`() = runTest {
+	fun `can respond to a PUT request with a 201 status`() = runTest {
 		val cantilever = Cantilever()
 		val response = cantilever.respond(emptyGetRequest.copy(method = APIGatewayMethod.PUT))
 		assertNotNull(response) {
@@ -145,5 +179,46 @@ class RoutingTest {
 		}
 	}
 
-	// Next test - returning a body in the response
+	// returning a body in the response
+	// understanding path parameters like GET /users/123
+
+	@Test
+	fun `resolves to a path containing a numeric parameter`() = runTest {
+		val cantilever = Cantilever()
+		val response = cantilever.respond(emptyGetRequest.copy(path = "/users/123"))
+		assertNotNull(response) {
+			assertEquals(200, response.status)
+		}
+	}
+
+	@Test
+	fun `resolves to a path containing a string parameter`() = runTest {
+		val cantilever = Cantilever()
+		val response = cantilever.respond(emptyGetRequest.copy(path = "/search/my-business-name"))
+		assertNotNull(response) {
+			assertEquals(200, response.status)
+		}
+	}
+
+	@Test
+	fun `resolves to complex parameterised path`() = runTest {
+		val cantilever = Cantilever()
+		val response = cantilever.respond(emptyGetRequest.copy(path = "/posts/23145/count"))
+		assertNotNull(response) {
+			assertEquals(200, response.status)
+		}
+	}
+
+
+	// understanding query parameters like GET /users/userId?=123
+	// combining paths, e.g. path("/users/") { get("{id}"), post("new/{name}")} equals GET /users/123 and POST /users/new/bob
+	@Disabled
+	@Test
+	fun `a method nested in a path resolves correctly`() = runTest {
+		val cantilever = Cantilever()
+		val response = cantilever.respond(emptyGetRequest.copy(path = "/users/bob"))
+		assertNotNull(response) {
+			assertEquals(200, response.status)
+		}
+	}
 }

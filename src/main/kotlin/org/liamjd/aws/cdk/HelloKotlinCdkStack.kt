@@ -35,6 +35,7 @@ class HelloKotlinCdkStack(scope: Construct, id: String, props: StackProps?) : St
 			.restApiName("KotlinCDKAPIGateway")
 			.description("Simple gateway to lambda function ${lambdaFunction.functionName}")
 			.handler(lambdaFunction)
+			.proxy(false)
 			.build()
 
 		val root = api.root.addMethod("GET")
