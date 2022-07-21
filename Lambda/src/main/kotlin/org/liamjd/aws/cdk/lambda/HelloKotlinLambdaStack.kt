@@ -13,7 +13,10 @@ class HelloKotlinLambdaStack(scope: Construct, id: String, props: StackProps?) :
 
 	init {
 		Tags.of(this).add("experiment", "cdk-kotlin")
-		Function.Builder.create(this, "LambdaFunctionFromKotlinCDK")
+		Function.Builder.create(
+			this, "LambdaF" +
+					"unctionFromKotlinCDK"
+		)
 			.description("Minimal lambda function")
 			.runtime(Runtime.JAVA_11)
 //			.code(Code.fromAsset())
