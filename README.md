@@ -8,3 +8,5 @@ a very basic Lambda function.
 
 The gradle `run` task is configured to be dependent on the `shadowJar` task of the Lambda submodule, so that the Lambda
 is always recompiled before the CDK synthesis takes place (as `cdk synth` builds and executes the main project class).
+
+As this relies on AWS CDK, you must have `node` installed.

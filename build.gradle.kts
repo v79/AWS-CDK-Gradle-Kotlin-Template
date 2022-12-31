@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-	implementation("software.amazon.awscdk:aws-cdk-lib:2.31.0")
-	implementation("software.constructs:constructs:[10.0.0,11.0.0)")
+	implementation("software.amazon.awscdk:aws-cdk-lib:2.56.1")
+	implementation("software.constructs:constructs:10.1.200")
 
 	// reflection
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
@@ -28,8 +28,8 @@ dependencies {
 	implementation(project(":annotations"))
 	// testing
 	testImplementation(kotlin("test"))
-	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.21")
-	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.21")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
 tasks.test {
